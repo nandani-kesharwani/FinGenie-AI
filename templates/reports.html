@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FinGenie AI - Reports</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="container mt-5">
+
+<h1 class="text-center">
+    📊 Financial Reports
+</h1>
+
+<hr>
+
+<div class="row">
+
+    <div class="col-md-4">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h4>Total Income</h4>
+                <h2>₹{{ total_income }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <h4>Total Expense</h4>
+                <h2>₹{{ total_expense }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h4>Savings</h4>
+                <h2>₹{{ savings }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<br><br>
+
+<h3 class="mt-5 text-center">
+    Income vs Expense
+</h3>
+
+<canvas id="financeChart"></canvas>
+<hr>
+
+<h3 class="mt-5 text-center">
+    🥧 Expense Category Breakdown
+</h3>
+
+<div style="width:500px;height:500px;margin:auto;">
+    <canvas id="expensePieChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+<script>
+const ctx = document.getElementById('financeChart');
+
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Income', 'Expense'],
+        datasets: [{
+            label: 'Amount (₹)',
+            data: [{{ total_income }}, {{ total_expense }}],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+
+<script>
+const pieCtx = document.getElementById("expensePieChart").getContext("2d");
+
+new Chart(pieCtx, {
+    type: "pie",
+    data: {
+        labels: {{ categories | tojson }},
+        datasets: [{
+            label: "Expenses",
+            data: {{ amounts | tojson }},
+            backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56",
+                "#4BC0C0",
+                "#9966FF",
+                "#FF9F40"
+            ]
+        }]
+    },
+    options: {
+        responsive: true
+    }
+});
+</script>
+<hr>
+
+<div class="text-center mt-4">
+    <a href="/dashboard" class="btn btn-dark">
+        ⬅ Back to Dashboard
+    </a>
+</div>
+</body>
+</html>
